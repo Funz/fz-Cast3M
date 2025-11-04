@@ -31,10 +31,15 @@ The output parser is embedded directly in Cast3m.json using a bash heredoc synta
 3. **Self-contained**: The model file is fully self-contained and can be copied/shared without additional files.
 4. **Follows fz patterns**: Similar to the Telemac example in the fz framework.
 
+**Note on exception handling in embedded version:**
+
+The embedded script uses bare `except:` clauses for maximum robustness - it will attempt to parse all available outputs even if some fail. This is intentional to ensure partial results are always returned. The standalone `parse_cast3m_output.py` uses more specific exception types for better debugging.
+
 The standalone `parse_cast3m_output.py` is kept for:
 - Documentation and readability
 - Testing and development
 - Users who want to customize or understand the parsing logic
+- Better error messages and specific exception handling
 
 ## Output Parsing Logic
 

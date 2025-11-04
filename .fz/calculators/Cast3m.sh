@@ -42,6 +42,18 @@ if [ -z "$DGIBI_FILE" ]; then
     exit 1
 fi
 
+# Validate the .dgibi file path (basic validation)
+if [[ ! "$DGIBI_FILE" =~ ^[a-zA-Z0-9._/ -]+$ ]]; then
+    echo "Error: Invalid characters in .dgibi filename"
+    exit 1
+fi
+
+# Check if file exists and is readable
+if [ ! -r "$DGIBI_FILE" ]; then
+    echo "Error: Cannot read .dgibi file: $DGIBI_FILE"
+    exit 1
+fi
+
 # Run Cast3m
 # Redirect output to castem.out
 $CAST3M_CMD "$DGIBI_FILE" > castem.out 2>&1
