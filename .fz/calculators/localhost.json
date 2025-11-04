@@ -1,0 +1,6 @@
+{
+    "uri": "sh://",
+    "models": {
+        "Cast3m": "bash .fz/calculators/Cast3m.sh"
+    }
+}

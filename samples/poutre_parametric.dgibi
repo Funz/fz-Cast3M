@@ -1,0 +1,73 @@
+* POUTRE CONSOLE EN FLEXION SIMPLE - Version parametrique
+*                           
+*                          | F
+*                          |
+*  |                       |
+*  |P1                     v P2
+*  |------------------------
+*  |
+*  |
+*
+* Formule analytique de la flèche en fonction de l'effort :
+* u = F*L^3/(3*E*I)
+* où F est la force, L la longueur, 
+*    E le module de Young (210e9 pour l'acier),
+*    I le moment d'inertie de la section de la poutre (largeur*hauteur^3/12)
+
+* OPTIONS DU CALCUL ********************************************
+
+* Dimension 2 et éléments finis de type SEG2
+OPTI DIME 2 ELEM SEG2;
+
+* ACQUISITION DES VARIABLES D'ENTREE ***************************
+
+long = $(long);
+haut = $(haut);
+larg = $(larg);
+F = $(F);
+
+* Section
+sect = haut*larg;
+* Inertie
+inrz = (larg*(haut**3))/12.;
+
+* MAILLAGE ******************************************************
+
+* Création des noeuds
+P1 = 0. 0.;
+P2 = long 0.;
+* Création de l'élément fini
+poutre = DROI 1 P1 P2;
+
+* MODELE ET MATERIAU ********************************************
+
+mo_pout = MODE poutre 'MECANIQUE' 'ELASTIQUE' 'ISOTROPE' 'POUT';
+ma_pout = MATE mo_pout 'YOUN' 210e9 'NU' 0.3 
+	'SECT' sect 'INRZ' inrz;
+
+* CONDITIONS AUX LIMITES ****************************************
+
+* Encastrement du point P1
+enca = BLOQ 'DEPL' 'ROTA' P1;
+
+* Calcul de la matrice de rigidité
+rigi1 = RIGI mo_pout ma_pout;
+rigitot = enca et rigi1;
+
+* Chargement
+char1 = FORC 'FY' (-1.*F) P2;
+
+* CALCUL ********************************************************
+
+* Résolution
+dep1 = RESO rigitot char1;
+
+* Extraction du déplacement au point d'intérêt
+dep_P2 = EXTR dep1 'UY' P2;
+
+MESS 'dep_P2=' dep_P2;
+
+
+*  FIN DE l'EXECUTION *******************************************
+
+FIN;

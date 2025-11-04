@@ -1,0 +1,10 @@
+{
+    "id": "Cast3m",
+    "varprefix": "$",
+    "formulaprefix": "%",
+    "delim": "()",
+    "commentline": "*",
+    "output": {
+        "outputs": "python3 .fz/models/parse_cast3m_output.py"
+    }
+}
