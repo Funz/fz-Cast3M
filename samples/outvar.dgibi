@@ -1,0 +1,7 @@
+* Commentaire
+
+MESS 'var=' var;
+MESS   'var2 = ' var2;
+
+FIN;
+

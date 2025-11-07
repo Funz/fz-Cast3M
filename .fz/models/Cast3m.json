@@ -1,0 +1,10 @@
+{
+    "id": "Cast3m",
+    "varprefix": "$",
+    "formulaprefix": "%",
+    "delim": "()",
+    "commentline": "*",
+    "output": {
+        "outputs": "python3 << 'PYEOF'\nimport re,json,glob,csv,os\nr={}\nif os.path.exists('castem.out'):\n for l in open('castem.out','r',errors='ignore'):\n  if not l.strip().startswith('$'):\n   m=re.search(r'([\\w_]+)=([\\d\\.\\+\\-E]+)',l.split(';')[0],re.I)\n   if m:\n    try:r[m.group(1)]=float(m.group(2))\n    except:r[m.group(1)]=float('nan')\nfor f in [f for f in glob.glob('*.txt') if f!='castem.out']:\n try:\n  c=open(f,'r',errors='ignore').read().strip()\n  try:r[os.path.splitext(f)[0]]=float(c)\n  except:r[os.path.splitext(f)[0]]=c\n except:pass\nfor f in glob.glob('*.csv'):\n try:\n  lines=list(csv.reader(open(f,'r',encoding='utf-8',errors='ignore'),delimiter=';'))\n  if lines:\n   cols=list(zip(*lines))\n   try:\n    float(cols[0][0])\n    r[os.path.splitext(f)[0]]=[[float(v) for v in row] for row in lines if any(row)]\n   except:\n    for col in cols:\n     try:r[col[0]]=[float(v) for v in col[1:] if v.strip()]\n     except:pass\n except:pass\nprint(json.dumps(r))\nPYEOF\n"
+    }
+}
