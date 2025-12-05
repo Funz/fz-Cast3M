@@ -1,0 +1,128 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test Plugin Structure
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    
+    - name: Install fz framework
+      run: |
+        pip install git+https://github.com/Funz/fz.git
+     
+    - name: Validate JSON files
+      run: |
+        echo "Validating model files..."
+        for f in .fz/models/*.json; do
+          echo "  Checking $f"
+          python -m json.tool "$f" > /dev/null
+        done
+        echo "Validating calculator config files..."
+        for f in .fz/calculators/*.json; do
+          echo "  Checking $f"
+          python -m json.tool "$f" > /dev/null
+        done
+    
+    - name: Check shell script syntax
+      run: |
+        echo "Checking shell scripts..."
+        for f in .fz/calculators/*.sh; do
+          echo "  Checking $f"
+          bash -n "$f"
+        done
+    
+    - name: Test fzi (parse variables)
+      run: |
+        python -c "
+        import fz
+        variables = fz.fzi('examples/Cast3m/poutre_parametric.dgibi', 'Cast3m')
+        print(f'Variables found: {list(variables.keys())}')
+        assert 'long' in variables, 'Variable long not found'
+        assert 'haut' in variables, 'Variable haut not found'
+        print('✓ fzi test passed')
+        "
+    
+    - name: Test fzc (compile input)
+      run: |
+        python -c "
+        import fz
+        import tempfile
+        import os
+        with tempfile.TemporaryDirectory() as tmpdir:
+            fz.fzc('examples/Cast3m/poutre_parametric.dgibi', {'long': 0.30, 'haut': 0.001, 'larg': 0.01, 'F': 1.0}, 'Cast3m', output_dir=tmpdir)
+            # Find compiled file in subdirectory
+            compiled = None
+            for root, dirs, files in os.walk(tmpdir):
+                if 'poutre_parametric.dgibi' in files:
+                    compiled = os.path.join(root, 'poutre_parametric.dgibi')
+                    break
+            assert compiled is not None, 'Compiled file not created'
+            with open(compiled) as f:
+                content = f.read()
+                assert '0.30' in content or '0.3' in content, 'Variable not substituted'
+        print('✓ fzc test passed')
+        "
+
+    - name: Run plugin tests
+      run: |
+        python tests/test_plugin.py
+    
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Check shell scripts are executable
+      run: |
+        for f in .fz/calculators/*.sh; do
+          if [ ! -x "$f" ]; then
+            echo "Error: $f is not executable"
+            exit 1
+          fi
+        done
+
+  docs:
+    name: Check Documentation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Check required documentation files
+      run: |
+        for f in README.md LICENSE; do
+          if [ ! -f "$f" ]; then
+            echo "Error: Missing $f"
+            exit 1
+          fi
+          echo "✓ $f exists"
+        done
+    
+    - name: Check example files
+      run: |
+        if [ ! -f "examples/Cast3m/poutre_parametric.dgibi" ]; then
+          echo "Error: Missing example input file"
+          exit 1
+        fi
+        echo "✓ Example files present"
