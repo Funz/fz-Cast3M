@@ -6,7 +6,7 @@ This document demonstrates the complete workflow of using the Cast3m plugin with
 
 ```bash
 # Install fz
-pip install funz-fz
+pip install git+https://github.com/Funz/fz.git
 
 # Install Cast3m (if not already installed)
 # The castem2000 or cast3m executable must be in your PATH
@@ -20,7 +20,7 @@ Identify variables in a parametric Cast3m input file:
 cd fz-cast3m
 python3 -c "
 import fz
-variables = fz.fzi('samples/poutre_parametric.dgibi', 'Cast3m')
+variables = fz.fzi('examples/Cast3m/poutre_parametric.dgibi', 'Cast3m')
 print('Variables found:', list(variables.keys()))
 "
 ```
@@ -43,7 +43,7 @@ variables = {
     'larg': 0.01,
     'F': 1.0
 }
-fz.fzc('samples/poutre_parametric.dgibi', variables, 'Cast3m', output_dir='compiled')
+fz.fzc('examples/Cast3m/poutre_parametric.dgibi', variables, 'Cast3m', output_dir='compiled')
 print('Compiled file created in: compiled/')
 "
 ```
@@ -116,7 +116,7 @@ import json
 
 # Step 1: Parse input variables
 print("Step 1: Parsing input variables...")
-variables = fz.fzi('samples/poutre_parametric.dgibi', 'Cast3m')
+variables = fz.fzi('examples/Cast3m/poutre_parametric.dgibi', 'Cast3m')
 print(f"Found variables: {list(variables.keys())}")
 
 # Step 2: Define parameter grid
@@ -131,7 +131,7 @@ print(f"Parameter combinations: {3 * 1 * 1 * 3} = 9 cases")
 
 # Step 3: Compile input files
 print("\nStep 3: Compiling input files...")
-fz.fzc('samples/poutre_parametric.dgibi', param_grid, 'Cast3m', output_dir='param_study')
+fz.fzc('examples/Cast3m/poutre_parametric.dgibi', param_grid, 'Cast3m', output_dir='param_study')
 print("Compiled files created in param_study/")
 
 # List generated directories
@@ -166,7 +166,7 @@ param_grid = {
 
 # Run parametric study
 results = fz.fzr(
-    'samples/poutre_parametric.dgibi',
+    'examples/Cast3m/poutre_parametric.dgibi',
     param_grid,
     'Cast3m',
     calculators=['localhost'],

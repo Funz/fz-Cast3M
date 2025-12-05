@@ -43,7 +43,7 @@ if [ -z "$DGIBI_FILE" ]; then
 fi
 
 # Validate the .dgibi file path (basic validation)
-if [[ ! "$DGIBI_FILE" =~ ^[a-zA-Z0-9._/ -]+$ ]]; then
+if [[ ! "$DGIBI_FILE" =~ ^[a-zA-Z0-9./_-]+$ ]]; then
     echo "Error: Invalid characters in .dgibi filename"
     exit 1
 fi
