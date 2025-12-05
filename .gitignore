@@ -17,12 +17,15 @@ ENV/
 
 # fz temporary files
 .fz/tmp/
+notebook_*
+compiled_*
 
 # Cast3m specific
 *.hermes
 *.sauve
 *.dgibi.bak
 castem.out
+*.trace
 
 # OS
 .DS_Store

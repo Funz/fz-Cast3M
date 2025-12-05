@@ -1,13 +1,14 @@
 #!/bin/bash
 # Cast3m calculator script for fz framework
+PATH="$PATH:/opt/CASTEM2025/bin"
 
-# Check if castem2000 or cast3m is available
-if command -v castem2000 &> /dev/null; then
-    CAST3M_CMD="castem2000"
+# Check if castem25 or cast3m is available
+if command -v castem25 &> /dev/null; then
+    CAST3M_CMD="castem25"
 elif command -v cast3m &> /dev/null; then
     CAST3M_CMD="cast3m"
 else
-    echo "Error: Cast3m executable (castem2000 or cast3m) not found in PATH"
+    echo "Error: Cast3m executable (castem25 or cast3m) not found in PATH"
     exit 1
 fi
 
