@@ -23,7 +23,7 @@ fz-cast3m/
 │   └── calculators/
 │       ├── Cast3m.sh                # Execution script
 │       └── localhost.json           # Local calculator config
-├── samples/
+├── examples/Cast3m/
 │   ├── poutre.dgibi                 # Simple example
 │   ├── poutre_parametric.dgibi      # Parametric example
 │   └── outvar.dgibi                 # Output examples
@@ -193,9 +193,9 @@ results = fz.fzr(
 - `.fz/models/README.md` - Design documentation
 - `.fz/calculators/Cast3m.sh` - Execution script
 - `.fz/calculators/localhost.json` - Calculator config
-- `samples/poutre.dgibi` - Example 1
-- `samples/poutre_parametric.dgibi` - Example 2 (parametric)
-- `samples/outvar.dgibi` - Example 3 (outputs)
+- `examples/Cast3m/poutre.dgibi` - Example 1
+- `examples/Cast3m/poutre_parametric.dgibi` - Example 2 (parametric)
+- `examples/Cast3m/outvar.dgibi` - Example 3 (outputs)
 - `README.md` - Main documentation
 - `EXAMPLE.md` - Usage examples
 - `.gitignore` - Git ignore rules

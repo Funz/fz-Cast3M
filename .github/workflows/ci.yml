@@ -26,7 +26,7 @@ jobs:
     - name: Install fz framework
       run: |
         pip install git+https://github.com/Funz/fz.git
-     
+    
     - name: Validate JSON files
       run: |
         echo "Validating model files..."
